@@ -1,0 +1,47 @@
+
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar pytest
+        run: pip install pytest
+
+      - name: Ejecutar pruebas
+        run: python -m pytest test_app.py
+
+
+  build-and-deploy:
+    name: Build and Deploy
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Build
+        run: |
+          echo "Build completado correctamente"
+
+      - name: Deploy
+        run: |
+          echo "Despliegue iniciado"
+          echo "El Job Build and Deploy se ejecutó después de Test"
