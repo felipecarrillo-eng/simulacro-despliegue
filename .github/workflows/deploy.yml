@@ -1,4 +1,3 @@
-
 name: CI/CD Pipeline
 
 on:
@@ -41,7 +40,19 @@ jobs:
         run: |
           echo "Build completado correctamente"
 
-      - name: Deploy
+      - name: Configurar SSH
         run: |
-          echo "Despliegue iniciado"
-          echo "El Job Build and Deploy se ejecutó después de Test"
+          mkdir -p ~/.ssh
+          echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/aws_key
+          chmod 600 ~/.ssh/aws_key
+          ssh-keyscan -H "${{ secrets.AWS_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Deploy en AWS
+        run: |
+          ssh -i ~/.ssh/aws_key \
+            "${{ secrets.AWS_USER }}@${{ secrets.AWS_HOST }}" \
+            'cd ~/simulacro-despliegue && docker compose pull app-backend && docker compose up -d app-backend'
+
+      - name: Verificar despliegue
+        run: |
+          echo "Despliegue completado correctamente"
