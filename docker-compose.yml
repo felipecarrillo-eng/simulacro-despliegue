@@ -14,7 +14,7 @@ services:
       - red-cba
 
   app-backend:
-    image: felipe3814/proyecto-mysql-app-backend:v1
+    image: felipe3814/proyecto-mysql-app-backend:latest
     container_name: app-backend
     restart: always
     ports:
