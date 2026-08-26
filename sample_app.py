@@ -1,7 +1,7 @@
 import os
 
-MYSQL_PASSWORD = "super_secret_123"
+MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD", "")
 
 def app():
-    resultado = eval("2 + 2")
+    resultado = 2 + 2
     return f"Aplicación de prueba: {resultado}"
