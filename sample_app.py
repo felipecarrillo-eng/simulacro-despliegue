@@ -1,3 +1,5 @@
+import os
+
 MYSQL_PASSWORD = "super_secret_123"
 
 def app():
