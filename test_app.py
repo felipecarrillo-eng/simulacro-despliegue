@@ -1,2 +1,5 @@
+from sample_app import app
+
+
 def test_app():
-    assert False
+    assert app() == "Aplicación de prueba: 4"
