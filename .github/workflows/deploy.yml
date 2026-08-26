@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feature/vulnerabilidades
 
 jobs:
 
@@ -27,9 +28,51 @@ jobs:
         run: python -m pytest test_app.py
 
 
+  bandit:
+    name: SAST - Bandit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar Bandit
+        run: pip install bandit
+
+      - name: Analizar código
+        run: bandit -r . -ll
+
+
+  trivy:
+    name: Seguridad - Trivy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Ejecutar Trivy
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: "felipe3814/proyecto-mysql-app-backend:latest"
+          format: "table"
+          exit-code: "1"
+          ignore-unfixed: false
+          severity: "HIGH,CRITICAL"
+
+
   build-and-deploy:
     name: Build and Deploy
-    needs: test
+    needs:
+      - test
+      - bandit
+      - trivy
+
     runs-on: ubuntu-latest
 
     steps:
